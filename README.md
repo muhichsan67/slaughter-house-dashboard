@@ -1,19 +1,21 @@
 # Mini Dashboard Full-Stack: Inventaris Gudang RPA
 
-Proyek ini dibangun untuk memenuhi tugas Ujian Tengah Semester (UTS) mata kuliah Web Application Development (Soal B - Dashboard Inventaris untuk NIM Genap)[cite: 1, 3]. 
+Proyek ini dibangun untuk memenuhi tugas Ujian Tengah Semester (UTS) mata kuliah Web Application Development (Soal B - Dashboard Inventaris untuk NIM Genap). 
+Nama    : Muhammad Ichsan Fathurrochman
+NIM     : 25120300012
 
 Aplikasi ini dirancang dengan struktur yang ramah pemula (*newbie-friendly*), menggunakan **FastAPI** di sisi Backend dan **Vue 3 (Composition API + Vite)** di sisi Frontend. Tampilan antarmuka mengandalkan class bawaan **Bootstrap 5** melalui CDN.
 
 ## 🚀 Fitur Utama
-- **Dashboard Ringkasan:** Menampilkan 4 tile metrik (Total Barang, Stok Menipis, Jumlah Kategori, Total Unit) yang dihitung secara dinamis menggunakan *computed properties* native[cite: 1, 3].
-- **Pencarian & Filter:** Filter data secara asinkron berdasarkan Nama Barang atau Kategori[cite: 3].
-- **Pengurutan (Sorting):** Urutkan barang dari A-Z atau Z-A berdasarkan nama barang menggunakan computed berantai[cite: 3].
-- **Manajemen Data (CRUD):** Tambah data baru, Hapus data, dan Edit data (Fitur Bonus) menggunakan tampilan Popup Modal native dari Bootstrap[cite: 2, 4].
-- **Indikator Status Stok:** Badge warna dinamis berdasarkan ambang batas stok[cite: 1, 3].
-- **Responsif:** Tampilan UI optimal di perangkat Desktop, Tablet, maupun Mobile menggunakan sistem Grid Bootstrap[cite: 2].
+- **Dashboard Ringkasan:** Menampilkan 4 tile metrik (Total Barang, Stok Menipis, Jumlah Kategori, Total Unit) yang dihitung secara dinamis menggunakan *computed properties* native.
+- **Pencarian & Filter:** Filter data secara asinkron berdasarkan Nama Barang atau Kategori.
+- **Pengurutan (Sorting):** Urutkan barang dari A-Z atau Z-A berdasarkan nama barang menggunakan computed berantai.
+- **Manajemen Data (CRUD):** Tambah data baru, Hapus data, dan Edit data (Fitur Bonus) menggunakan tampilan Popup Modal native dari Bootstrap.
+- **Indikator Status Stok:** Badge warna dinamis berdasarkan ambang batas stok.
+- **Responsif:** Tampilan UI optimal di perangkat Desktop, Tablet, maupun Mobile menggunakan sistem Grid Bootstrap.
 
 ## 📊 Ambang Batas (Threshold) Status Stok
-Berdasarkan ketentuan operasional gudang inventaris[cite: 3], status stok dikategorikan sebagai berikut:
+Berdasarkan ketentuan operasional gudang inventaris, status stok dikategorikan sebagai berikut:
 - 🔴 **Habis (Stok == 0):** Barang sama sekali tidak tersedia di gudang. Operasional atau produksi yang membutuhkan barang ini terhenti.
 - 🟡 **Menipis (Stok 1 - 20):** Mencapai batas *buffer* / *safety stock*. Membutuhkan tindakan pemesanan ulang (restock) segera ke supplier RPA.
 - 🟢 **Aman (Stok > 20):** Ketersediaan barang dalam batas wajar untuk memenuhi kebutuhan produksi.
@@ -30,7 +32,7 @@ Pastikan Anda telah menginstal perangkat lunak berikut di komputer Anda:
 ## ⚙️️ Cara Menjalankan Aplikasi
 
 ### 1. Menjalankan Backend (FastAPI)
-Backend menangani logika REST API dan menggunakan penyimpanan *in-memory* berbasis Python List yang dimuat dari file `data.json`[cite: 2].
+Backend menangani logika REST API dan menggunakan penyimpanan *in-memory* berbasis Python List yang dimuat dari file `data.json`.
 
 1. Buka terminal dan masuk ke folder backend:
 ```bash
