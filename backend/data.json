@@ -1,0 +1,22 @@
+[
+  {"id": 1, "nama": "Karkas Ayam Utuh", "kategori": "Daging Unggas", "jumlah_stok": 50, "lokasi_gudang": "Cold Storage A"},
+  {"id": 2, "nama": "Karkas Sapi Potong", "kategori": "Daging Merah", "jumlah_stok": 15, "lokasi_gudang": "Cold Storage B"},
+  {"id": 3, "nama": "Paha Bawah Ayam", "kategori": "Daging Unggas", "jumlah_stok": 100, "lokasi_gudang": "Cold Storage A"},
+  {"id": 4, "nama": "Dada Fillet", "kategori": "Daging Unggas", "jumlah_stok": 5, "lokasi_gudang": "Cold Storage A"},
+  {"id": 5, "nama": "Sayap Ayam", "kategori": "Daging Unggas", "jumlah_stok": 0, "lokasi_gudang": "Cold Storage A"},
+  {"id": 6, "nama": "Hati Ampela", "kategori": "Jeroan", "jumlah_stok": 30, "lokasi_gudang": "Cold Storage C"},
+  {"id": 7, "nama": "Kaki Sapi (Kikil)", "kategori": "Daging Merah", "jumlah_stok": 10, "lokasi_gudang": "Cold Storage B"},
+  {"id": 8, "nama": "Kulit Ayam", "kategori": "Daging Unggas", "jumlah_stok": 45, "lokasi_gudang": "Cold Storage A"},
+  {"id": 9, "nama": "Tulang Sapi", "kategori": "Tulang", "jumlah_stok": 20, "lokasi_gudang": "Cold Storage B"},
+  {"id": 10, "nama": "Daging Cincang Sapi", "kategori": "Daging Merah", "jumlah_stok": 60, "lokasi_gudang": "Cold Storage B"},
+  {"id": 11, "nama": "Karkas Bebek", "kategori": "Daging Unggas", "jumlah_stok": 8, "lokasi_gudang": "Cold Storage A"},
+  {"id": 12, "nama": "Daging Kerbau", "kategori": "Daging Merah", "jumlah_stok": 25, "lokasi_gudang": "Cold Storage B"},
+  {"id": 13, "nama": "Jeroan Sapi (Babat)", "kategori": "Jeroan", "jumlah_stok": 12, "lokasi_gudang": "Cold Storage C"},
+  {"id": 14, "nama": "Buntut Sapi", "kategori": "Daging Merah", "jumlah_stok": 5, "lokasi_gudang": "Cold Storage B"},
+  {"id": 15, "nama": "Iga Sapi", "kategori": "Daging Merah", "jumlah_stok": 0, "lokasi_gudang": "Cold Storage B"},
+  {"id": 16, "nama": "Daging Slice (Sukiyaki)", "kategori": "Daging Merah", "jumlah_stok": 75, "lokasi_gudang": "Cold Storage B"},
+  {"id": 17, "nama": "Sosis Sapi", "kategori": "Olahan", "jumlah_stok": 200, "lokasi_gudang": "Dry Storage A"},
+  {"id": 18, "nama": "Bakso Daging", "kategori": "Olahan", "jumlah_stok": 150, "lokasi_gudang": "Dry Storage A"},
+  {"id": 19, "nama": "Karkas Kambing", "kategori": "Daging Merah", "jumlah_stok": 18, "lokasi_gudang": "Cold Storage B"},
+  {"id": 20, "nama": "Lemak Sapi (Gajih)", "kategori": "Daging Merah", "jumlah_stok": 40, "lokasi_gudang": "Cold Storage C"}
+]
