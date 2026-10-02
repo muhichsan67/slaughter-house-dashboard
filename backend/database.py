@@ -1,7 +1,6 @@
 import json
 import os
 
-# In-memory list untuk menyimpan data
 inventory_db = []
 
 def load_data():

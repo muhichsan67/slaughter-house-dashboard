@@ -23,3 +23,13 @@ def hapus_barang(barang_id: int):
             deleted_item = database.inventory_db.pop(i)
             return {"message": "Data berhasil dihapus", "data": deleted_item}
     raise HTTPException(status_code=404, detail="Barang tidak ditemukan")
+
+@router.put("/{barang_id}")
+def update_barang(barang_id: int, barang_update: model.Barang):
+    for i, b in enumerate(database.inventory_db):
+        if b['id'] == barang_id:
+            updated_data = barang_update.dict()
+            updated_data['id'] = barang_id
+            database.inventory_db[i] = updated_data
+            return {"message": "Data berhasil diubah", "data": updated_data}
+    raise HTTPException(status_code=404, detail="Barang tidak ditemukan")
