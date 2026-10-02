@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import database
-from route import barang
+import route
 
 app = FastAPI()
 
@@ -13,7 +13,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(barang.router, prefix="/api/barang", tags=["Barang"])
+app.include_router(route.router, prefix="/api/barang", tags=["Barang"])
 
 @app.on_event("startup")
 def startup_event():

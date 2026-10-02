@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from model import Barang
+import model
 import database
 
 router = APIRouter()
@@ -9,7 +9,7 @@ def get_all_barang():
     return database.inventory_db
 
 @router.post("/")
-def tambah_barang(barang: Barang):
+def tambah_barang(barang: model.Barang):
     new_id = max([b['id'] for b in database.inventory_db], default=0) + 1
     barang_dict = barang.dict()
     barang_dict['id'] = new_id
