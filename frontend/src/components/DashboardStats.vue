@@ -1,97 +1,41 @@
 <script setup>
 import { computed } from 'vue';
-import AppIcon from './AppIcon.vue';
-import { getStatus, formatNumber } from '../constants';
 
-const props = defineProps({
-  barangList: { type: Array, default: () => [] },
-  isLoading: { type: Boolean, default: false },
-});
+const props = defineProps(['dataBarang']);
 
-const total = computed(() => props.barangList.length);
-const totalUnit = computed(() => props.barangList.reduce((acc, b) => acc + (Number(b.jumlah_stok) || 0), 0));
-const jumlahKategori = computed(() => new Set(props.barangList.map((b) => b.kategori)).size);
-
-const counts = computed(() => {
-  const c = { aman: 0, menipis: 0, habis: 0 };
-  props.barangList.forEach((b) => c[getStatus(b.jumlah_stok).key]++);
-  return c;
-});
-
-// Sama dengan hitungan "Stok Menipis" sebelumnya (stok <= 20, termasuk yang habis)
-const perluRestok = computed(() => counts.value.menipis + counts.value.habis);
-
-const percent = (n) => (total.value ? (n / total.value) * 100 : 0);
-
-const segments = computed(() => [
-  { key: 'aman', label: 'Aman', value: counts.value.aman },
-  { key: 'menipis', label: 'Menipis', value: counts.value.menipis },
-  { key: 'habis', label: 'Habis', value: counts.value.habis },
-]);
-
-const headline = computed(() => {
-  if (!total.value) return 'Belum ada barang di gudang';
-  if (!perluRestok.value) return 'Semua stok dalam kondisi aman';
-  return `${perluRestok.value} dari ${total.value} barang perlu restok`;
+const totalBarang = computed(() => props.dataBarang.length);
+const stokMenipis = computed(() => props.dataBarang.filter(b => b.jumlah_stok <= 20).length);
+const totalUnit = computed(() => props.dataBarang.reduce((total, b) => total + b.jumlah_stok, 0));
+const jumlahKategori = computed(() => {
+  const kategoriUnik = [];
+  props.dataBarang.forEach(b => {
+    if (!kategoriUnik.includes(b.kategori)) kategoriUnik.push(b.kategori);
+  });
+  return kategoriUnik.length;
 });
 </script>
 
 <template>
-  <section class="summary" aria-labelledby="summary-title">
-    <div class="summary__top">
-      <div>
-        <h2 id="summary-title" class="summary__label">Kondisi stok</h2>
-        <p v-if="isLoading && !total" class="skeleton skeleton--title"></p>
-        <p v-else class="summary__headline">{{ headline }}</p>
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card bg-primary text-white p-3 text-center">
+        <h5>Total Barang</h5><h3>{{ totalBarang }}</h3>
       </div>
-
-      <ul class="legend" v-if="total">
-        <li v-for="s in segments" :key="s.key">
-          <span class="dot" :class="`dot--${s.key}`"></span>
-          {{ s.label }} <strong>{{ formatNumber(s.value) }}</strong>
-        </li>
-      </ul>
     </div>
-
-    <div
-      class="distribution"
-      :class="{ 'distribution--empty': !total }"
-      role="img"
-      :aria-label="`Aman ${counts.aman}, menipis ${counts.menipis}, habis ${counts.habis}`"
-    >
-      <span
-        v-for="s in segments"
-        :key="s.key"
-        class="distribution__seg"
-        :class="`seg--${s.key}`"
-        :style="{ width: percent(s.value) + '%' }"
-      ></span>
+    <div class="col-md-3">
+      <div class="card bg-warning text-dark p-3 text-center">
+        <h5>Stok Menipis</h5><h3>{{ stokMenipis }}</h3>
+      </div>
     </div>
-
-    <dl class="metrics">
-      <div class="metric">
-        <dt><AppIcon name="box" :size="16" /> Total barang</dt>
-        <dd v-if="isLoading && !total" class="skeleton skeleton--num"></dd>
-        <dd v-else>{{ formatNumber(total) }}</dd>
+    <div class="col-md-3">
+      <div class="card bg-success text-white p-3 text-center">
+        <h5>Jumlah Kategori</h5><h3>{{ jumlahKategori }}</h3>
       </div>
-      <div class="metric">
-        <dt><AppIcon name="layers" :size="16" /> Total unit</dt>
-        <dd v-if="isLoading && !total" class="skeleton skeleton--num"></dd>
-        <dd v-else>{{ formatNumber(totalUnit) }}</dd>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-info text-white p-3 text-center">
+        <h5>Total Unit</h5><h3>{{ totalUnit }}</h3>
       </div>
-      <div class="metric">
-        <dt><AppIcon name="tag" :size="16" /> Kategori</dt>
-        <dd v-if="isLoading && !total" class="skeleton skeleton--num"></dd>
-        <dd v-else>{{ formatNumber(jumlahKategori) }}</dd>
-      </div>
-      <div class="metric" :class="{ 'metric--alert': perluRestok > 0 }">
-        <dt><AppIcon name="alert" :size="16" /> Perlu restok</dt>
-        <dd v-if="isLoading && !total" class="skeleton skeleton--num"></dd>
-        <dd v-else>
-          {{ formatNumber(perluRestok) }}
-          <small v-if="counts.habis">{{ formatNumber(counts.habis) }} habis</small>
-        </dd>
-      </div>
-    </dl>
-  </section>
+    </div>
+  </div>
 </template>

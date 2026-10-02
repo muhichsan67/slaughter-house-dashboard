@@ -1,91 +1,105 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { fetchBarang } from './services/api';
-import AppHeader from './components/AppHeader.vue';
-import AppIcon from './components/AppIcon.vue';
+import { ref, onMounted } from 'vue';
+import { fetchBarang, postBarang, putBarang, deleteBarang } from './services/api';
 import DashboardStats from './components/DashboardStats.vue';
 import InventoryList from './components/InventoryList.vue';
 import InventoryModal from './components/InventoryModal.vue';
-import ToastHost from './components/ToastHost.vue';
-import ConfirmDialog from './components/ConfirmDialog.vue';
 
+// State Utama
 const barangList = ref([]);
 const isLoading = ref(false);
-const errorMsg = ref('');
+const pesanError = ref('');
 
-// State untuk modal tambah/edit
-const showModal = ref(false);
-const editData = ref(null);
+// State Modal (Popup)
+const tampilkanModal = ref(false);
+const dataYangDiedit = ref(null);
 
-const categories = computed(() => [...new Set(barangList.value.map((b) => b.kategori).filter(Boolean))].sort());
-const locations = computed(() => [...new Set(barangList.value.map((b) => b.lokasi_gudang).filter(Boolean))].sort());
-
-const loadData = async () => {
+// Fungsi Ambil Data
+const muatDataBarang = async () => {
   isLoading.value = true;
-  errorMsg.value = '';
+  pesanError.value = '';
   try {
     barangList.value = await fetchBarang();
   } catch (error) {
-    errorMsg.value = error.message;
+    pesanError.value = error.message;
   } finally {
     isLoading.value = false;
   }
 };
 
-const openAddModal = () => {
-  editData.value = null; // Kosongkan data untuk form tambah baru
-  showModal.value = true;
+// Fungsi Simpan Data (Tambah / Edit)
+const simpanDataBarang = async (dataForm) => {
+  try {
+    if (dataForm.id) {
+      await putBarang(dataForm.id, dataForm); // Mode Edit
+    } else {
+      await postBarang(dataForm); // Mode Tambah Baru
+    }
+    tampilkanModal.value = false;
+    alert('Data berhasil disimpan!');
+    await muatDataBarang(); // Refresh data di tabel
+  } catch (error) {
+    alert(error.message);
+  }
 };
 
-const openEditModal = (barang) => {
-  editData.value = barang; // Oper data barang yang diklik ke modal
-  showModal.value = true;
+// Fungsi Hapus Data
+const hapusDataBarang = async (id) => {
+  if (!confirm('Apakah Anda yakin ingin menghapus barang ini?')) return;
+  try {
+    await deleteBarang(id);
+    alert('Data berhasil dihapus!');
+    await muatDataBarang();
+  } catch (error) {
+    alert(error.message);
+  }
 };
 
-onMounted(() => loadData());
+// Navigasi Modal
+const bukaModalTambah = () => {
+  dataYangDiedit.value = null; // Pastikan form kosong
+  tampilkanModal.value = true;
+};
+
+const bukaModalEdit = (barang) => {
+  dataYangDiedit.value = barang; // Isi form dengan data yang dipilih
+  tampilkanModal.value = true;
+};
+
+onMounted(() => {
+  muatDataBarang();
+});
 </script>
 
 <template>
-  <AppHeader @add="openAddModal" />
-
-  <main class="page">
-    <div class="page__intro">
-      <h1>Inventaris gudang</h1>
-      <p>Pantau stok karkas dan daging, lalu perbarui saat barang masuk atau keluar.</p>
-    </div>
-
-    <div v-if="errorMsg" class="banner banner--error" role="alert">
-      <AppIcon name="alert" :size="20" />
-      <div class="banner__body">
-        <strong>{{ errorMsg }}</strong>
-        <span>Periksa apakah server API sedang berjalan dan bisa dijangkau, lalu coba lagi.</span>
-      </div>
-      <button type="button" class="btn btn--ghost btn--sm" :disabled="isLoading" @click="loadData">
-        <AppIcon name="refresh" :size="16" :class="{ spin: isLoading }" />
-        Coba lagi
+  <div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Dashboard Inventaris</h2>
+      <button @click="bukaModalTambah" class="btn btn-primary">
+        + Tambah Barang Baru
       </button>
     </div>
 
-    <DashboardStats :barangList="barangList" :isLoading="isLoading" />
+    <!-- Pesan Status -->
+    <div v-if="isLoading" class="alert alert-info">Sedang memuat data...</div>
+    <div v-if="pesanError" class="alert alert-danger">{{ pesanError }}</div>
 
-    <InventoryList
-      :barangList="barangList"
-      :isLoading="isLoading"
-      @refresh="loadData"
-      @edit="openEditModal"
-      @add="openAddModal"
+    <!-- 4 Kotak Ringkasan -->
+    <DashboardStats :dataBarang="barangList" />
+
+    <!-- Tabel Daftar Barang -->
+    <InventoryList 
+      :dataBarang="barangList" 
+      @mintaEdit="bukaModalEdit"
+      @mintaHapus="hapusDataBarang"
     />
-  </main>
 
-  <InventoryModal
-    :show="showModal"
-    :editData="editData"
-    :categories="categories"
-    :locations="locations"
-    @close="showModal = false"
-    @refresh="loadData"
-  />
-
-  <ConfirmDialog />
-  <ToastHost />
+    <!-- Popup Modal Form -->
+    <InventoryModal 
+      v-if="tampilkanModal"
+      :dataEdit="dataYangDiedit"
+      @tutupModal="tampilkanModal = false"
+      @simpanData="simpanDataBarang"
+    />
+  </div>
 </template>
