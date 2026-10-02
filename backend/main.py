@@ -1,12 +1,10 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-import json
-import os
+import database
+from routers import barang
 
 app = FastAPI()
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -15,19 +13,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Model Data
-class Barang(BaseModel):
-    id: int = None
-    nama: str
-    kategori: str
-    jumlah_stok: int
-    lokasi_gudang: str
-
-inventory_db = []
+app.include_router(barang.router, prefix="/api/barang", tags=["Barang"])
 
 @app.on_event("startup")
-def load_data():
-    global inventory_db
-    if os.path.exists("data.json"):
-        with open("data.json", "r") as f:
-            inventory_db = json.load(f)
+def startup_event():
+    database.load_data()
