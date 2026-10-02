@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import database
-from routers import barang
+from route import barang
 
 app = FastAPI()
 
