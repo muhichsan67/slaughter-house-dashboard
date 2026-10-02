@@ -21,3 +21,13 @@ export const deleteBarang = async (id) => {
   if (!res.ok) throw new Error('Gagal menghapus data');
   return res.json();
 };
+
+export const putBarang = async (id, data) => {
+  const res = await fetch(`${API_URL}/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('Gagal mengubah data');
+  return res.json();
+};
