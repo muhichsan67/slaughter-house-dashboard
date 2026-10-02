@@ -14,6 +14,7 @@ def tambah_barang(barang: model.Barang):
     barang_dict = barang.dict()
     barang_dict['id'] = new_id
     database.inventory_db.append(barang_dict)
+    database.save_data()
     return {"message": "Data berhasil ditambahkan", "data": barang_dict}
 
 @router.delete("/{barang_id}")
@@ -21,6 +22,7 @@ def hapus_barang(barang_id: int):
     for i, b in enumerate(database.inventory_db):
         if b['id'] == barang_id:
             deleted_item = database.inventory_db.pop(i)
+            database.save_data()
             return {"message": "Data berhasil dihapus", "data": deleted_item}
     raise HTTPException(status_code=404, detail="Barang tidak ditemukan")
 
@@ -31,5 +33,6 @@ def update_barang(barang_id: int, barang_update: model.Barang):
             updated_data = barang_update.dict()
             updated_data['id'] = barang_id
             database.inventory_db[i] = updated_data
+            database.save_data()
             return {"message": "Data berhasil diubah", "data": updated_data}
     raise HTTPException(status_code=404, detail="Barang tidak ditemukan")
