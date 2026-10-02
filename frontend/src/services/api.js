@@ -1,4 +1,6 @@
-const API_URL = 'http://127.0.0.1:8000/api/barang';
+// Bisa diubah lewat file .env: VITE_API_URL=http://192.168.1.10:8000/api/barang
+// (berguna saat mengetes dari HP, karena 127.0.0.1 di HP bukan komputer Anda)
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api/barang';
 
 export const fetchBarang = async () => {
   const res = await fetch(API_URL);

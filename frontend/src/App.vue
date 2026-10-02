@@ -1,17 +1,24 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { fetchBarang } from './services/api';
+import AppHeader from './components/AppHeader.vue';
+import AppIcon from './components/AppIcon.vue';
 import DashboardStats from './components/DashboardStats.vue';
-import InventoryModal from './components/InventoryModal.vue';
 import InventoryList from './components/InventoryList.vue';
+import InventoryModal from './components/InventoryModal.vue';
+import ToastHost from './components/ToastHost.vue';
+import ConfirmDialog from './components/ConfirmDialog.vue';
 
 const barangList = ref([]);
 const isLoading = ref(false);
 const errorMsg = ref('');
 
-// State untuk Modal Modal
+// State untuk modal tambah/edit
 const showModal = ref(false);
 const editData = ref(null);
+
+const categories = computed(() => [...new Set(barangList.value.map((b) => b.kategori).filter(Boolean))].sort());
+const locations = computed(() => [...new Set(barangList.value.map((b) => b.lokasi_gudang).filter(Boolean))].sort());
 
 const loadData = async () => {
   isLoading.value = true;
@@ -39,34 +46,46 @@ onMounted(() => loadData());
 </script>
 
 <template>
-  <div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <h2 class="fw-bold mb-0">Inventaris Warehouse RPA</h2>
-        <p class="text-muted">Manajemen stok karkas dan daging terpusat</p>
+  <AppHeader @add="openAddModal" />
+
+  <main class="page">
+    <div class="page__intro">
+      <h1>Inventaris gudang</h1>
+      <p>Pantau stok karkas dan daging, lalu perbarui saat barang masuk atau keluar.</p>
+    </div>
+
+    <div v-if="errorMsg" class="banner banner--error" role="alert">
+      <AppIcon name="alert" :size="20" />
+      <div class="banner__body">
+        <strong>{{ errorMsg }}</strong>
+        <span>Periksa apakah server API sedang berjalan dan bisa dijangkau, lalu coba lagi.</span>
       </div>
-      <button @click="openAddModal" class="btn btn-primary btn-lg rounded-pill shadow-sm px-4">
-        <i class="bi bi-plus-lg me-2"></i> Tambah Barang
+      <button type="button" class="btn btn--ghost btn--sm" :disabled="isLoading" @click="loadData">
+        <AppIcon name="refresh" :size="16" :class="{ spin: isLoading }" />
+        Coba lagi
       </button>
     </div>
-    
-    <div v-if="isLoading" class="alert alert-info border-0 rounded-3"><i class="bi bi-hourglass-split me-2"></i>Memuat data dari server...</div>
-    <div v-else-if="errorMsg" class="alert alert-danger border-0 rounded-3"><i class="bi bi-bug me-2"></i>{{ errorMsg }}</div>
-    
-    <DashboardStats :barangList="barangList" />
-    
-    <InventoryList 
-      :barangList="barangList" 
-      :isLoading="isLoading" 
-      @refresh="loadData"
-      @edit="openEditModal" 
-    />
 
-    <InventoryModal 
-      :show="showModal" 
-      :editData="editData" 
-      @close="showModal = false" 
-      @refresh="loadData" 
+    <DashboardStats :barangList="barangList" :isLoading="isLoading" />
+
+    <InventoryList
+      :barangList="barangList"
+      :isLoading="isLoading"
+      @refresh="loadData"
+      @edit="openEditModal"
+      @add="openAddModal"
     />
-  </div>
+  </main>
+
+  <InventoryModal
+    :show="showModal"
+    :editData="editData"
+    :categories="categories"
+    :locations="locations"
+    @close="showModal = false"
+    @refresh="loadData"
+  />
+
+  <ConfirmDialog />
+  <ToastHost />
 </template>

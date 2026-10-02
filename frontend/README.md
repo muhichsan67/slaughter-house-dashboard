@@ -1,5 +1,41 @@
-# Vue 3 + Vite
+# Inventaris Gudang RPA — Frontend
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Vue 3 + Vite. Tanpa dependensi UI tambahan (Bootstrap CDN sudah dihapus).
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## Menjalankan
+
+```bash
+npm install
+npm run dev
+```
+
+## Mengubah alamat API
+
+Buat file `.env` di folder ini:
+
+```
+VITE_API_URL=http://192.168.1.10:8000/api/barang
+```
+
+Default-nya `http://127.0.0.1:8000/api/barang`. Saat mengetes dari HP, pakai IP komputer Anda di jaringan yang sama.
+
+## Struktur
+
+```
+src/
+  App.vue                  halaman utama
+  constants.js             batas stok menipis (LOW_STOCK) & helper status
+  style.css                design system (token warna, tema terang/gelap, responsif)
+  components/
+    AppHeader.vue          top bar, tombol tema & tambah barang
+    AppIcon.vue            ikon SVG inline
+    DashboardStats.vue     ringkasan kondisi stok
+    InventoryList.vue      pencarian, filter, tabel/kartu, paginasi
+    InventoryModal.vue     form tambah/edit
+    ConfirmDialog.vue      pengganti confirm()
+    ToastHost.vue          pengganti alert()
+  composables/
+    useFeedback.js         state toast & dialog konfirmasi
+    useTheme.js            tema terang/gelap
+  services/api.js          pemanggilan API (kontrak tidak berubah)
+```
